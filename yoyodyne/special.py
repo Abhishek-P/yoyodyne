@@ -6,5 +6,6 @@ PAD = "<P>"
 START = "<S>"
 END = "<E>"
 UNK = "<UNK>"
+MASK = "<MASK>"
 
-SPECIAL = [UNK, PAD, START, END]
+SPECIAL = [UNK, PAD, START, END, MASK]
