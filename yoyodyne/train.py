@@ -365,6 +365,9 @@ def main() -> None:
         "--train_from",
         help="Path to ckpt checkpoint to resume training from",
     )
+    # Data set index can be provided
+    parser.add_argument("--index", required=True, help="Path to index (.pkl)")
+
     # Data configuration arguments.
     dataconfig.DataConfig.add_argparse_args(parser)
     # Architecture arguments.
