@@ -125,8 +125,20 @@ class IndexNoFeatures(BaseIndex):
         return self.source_map.index(special.UNK)
 
     @property
+    def mask_idx(self) -> int:
+        return self.source_map.index(special.MASK)
+
+    @property
+    def task1_idx(self) -> int:
+        return self.source_map.index(special.TASK1)
+
+    @property
+    def task2_idx(self) -> int:
+        return self.source_map.index(special.TASK2)
+
+    @property
     def special_idx(self) -> Set[int]:
-        return {self.unk_idx, self.pad_idx, self.start_idx, self.end_idx}
+        return {self.unk_idx, self.pad_idx, self.start_idx, self.end_idx, self.mask_idx, self.task1_idx, self.task2_idx}
 
 
 class IndexFeatures(IndexNoFeatures):
