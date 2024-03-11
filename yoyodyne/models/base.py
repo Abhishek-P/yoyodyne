@@ -66,8 +66,11 @@ class BaseEncoderDecoder(pl.LightningModule):
         embedding_size=128,
         encoder_layers=1,
         hidden_size=512,
+        dataset=None,
         **kwargs,  # Ignored.
     ):
+        self.dataset = dataset
+        # Saves hyperparameters for PL checkpointing.
         super().__init__()
         self.pad_idx = pad_idx
         self.start_idx = start_idx
@@ -92,7 +95,7 @@ class BaseEncoderDecoder(pl.LightningModule):
         self.evaluator = evaluators.Evaluator()
         self.loss_func = self.get_loss_func("mean")
         # Saves hyperparameters for PL checkpointing.
-        self.save_hyperparameters()
+        self.save_hyperparameters(ignore=["dataset"])
 
     @staticmethod
     def _xavier_embedding_initialization(
@@ -177,6 +180,11 @@ class BaseEncoderDecoder(pl.LightningModule):
         Returns:
             torch.Tensor: loss.
         """
+        if batch_idx == 0:
+            print("TRAIN TRUNCATED SOURCE BATCH", list(self.dataset.decode_source(batch.source.padded))[:3], flush=True)
+            print("TRAIN TRUNCATED TARGET BATCH", list(self.dataset.decode_target(batch.target.padded))[:3], flush=True)
+            if batch.features:
+               print("TRAIN TRUNCATED FEATURES BATCH", list(self.dataset.decode_features(batch.features.padded))[:3], flush=True)
         self.train()
         predictions = self(batch)
         target_padded = batch.target.padded
@@ -206,6 +214,11 @@ class BaseEncoderDecoder(pl.LightningModule):
         Returns:
             Dict[str, float]: validation metrics.
         """
+        if batch_idx == 0:
+            print("EVAL TRUNCATED SOURCE BATCH", list(self.dataset.decode_source(batch.source.padded))[:10])
+            print("EVAL TRUNCATED TARGET BATCH", list(self.dataset.decode_target(batch.target.padded))[:10])
+            if batch.features:
+                print("EVAL TRUNCATED FEATURES BATCH", list(self.dataset.decode_features(batch.features.padded))[:10])
         self.eval()
         # Greedy decoding.
         predictions = self(batch)
@@ -276,6 +289,7 @@ class BaseEncoderDecoder(pl.LightningModule):
             "adadelta": optim.Adadelta,
             "adam": optim.Adam,
             "sgd": optim.SGD,
+
         }
         optimizer = optim_fac[self.optimizer]
         kwargs = {"lr": self.learning_rate}

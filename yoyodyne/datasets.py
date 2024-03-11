@@ -210,7 +210,7 @@ class DatasetNoFeatures(BaseDataset):
             List[List[str]]: decoded symbols.
         """
         return self._decode(
-            self.source_map,
+            self.index.source_map,
             indices,
             symbols=symbols,
             special=special,
@@ -362,7 +362,7 @@ class DatasetFeatures(DatasetNoFeatures):
             self.index.pad_idx,
         )
         return self._decode(
-            self.source_map,
+            self.index.source_map,
             indices,
             symbols=symbols,
             special=special,
