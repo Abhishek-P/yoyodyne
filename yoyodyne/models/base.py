@@ -180,11 +180,10 @@ class BaseEncoderDecoder(pl.LightningModule):
         Returns:
             torch.Tensor: loss.
         """
-        if batch_idx == 0:
-            print("TRAIN TRUNCATED SOURCE BATCH", list(self.dataset.decode_source(batch.source.padded))[:3], flush=True)
-            print("TRAIN TRUNCATED TARGET BATCH", list(self.dataset.decode_target(batch.target.padded))[:3], flush=True)
-            if batch.features:
-               print("TRAIN TRUNCATED FEATURES BATCH", list(self.dataset.decode_features(batch.features.padded))[:3], flush=True)
+        print("TRAIN TRUNCATED SOURCE BATCH", list(self.dataset.decode_source(batch.source.padded))[:3], flush=True)
+        print("TRAIN TRUNCATED TARGET BATCH", list(self.dataset.decode_target(batch.target.padded))[:3], flush=True)
+        if batch.features:
+           print("TRAIN TRUNCATED FEATURES BATCH", list(self.dataset.decode_features(batch.features.padded))[:3], flush=True)
         self.train()
         predictions = self(batch)
         target_padded = batch.target.padded
@@ -214,11 +213,10 @@ class BaseEncoderDecoder(pl.LightningModule):
         Returns:
             Dict[str, float]: validation metrics.
         """
-        if batch_idx == 0:
-            print("EVAL TRUNCATED SOURCE BATCH", list(self.dataset.decode_source(batch.source.padded))[:10])
-            print("EVAL TRUNCATED TARGET BATCH", list(self.dataset.decode_target(batch.target.padded))[:10])
-            if batch.features:
-                print("EVAL TRUNCATED FEATURES BATCH", list(self.dataset.decode_features(batch.features.padded))[:10])
+        print("EVAL TRUNCATED SOURCE BATCH", list(self.dataset.decode_source(batch.source.padded))[:10])
+        print("EVAL TRUNCATED TARGET BATCH", list(self.dataset.decode_target(batch.target.padded))[:10])
+        if batch.features:
+            print("EVAL TRUNCATED FEATURES BATCH", list(self.dataset.decode_features(batch.features.padded))[:10])
         self.eval()
         # Greedy decoding.
         predictions = self(batch)
